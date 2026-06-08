@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تواصل معنا — ToolBoxPro</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="logo"><span class="logo-icon">⬡</span><span class="logo-text">ToolBox<strong>Pro</strong></span></div>
+      <nav class="nav"><a href="../index.html">الرئيسية</a></nav>
+    </div>
+  </header>
+
+  <div class="tool-page-header">
+    <div class="container">
+      <a href="../index.html" class="back-link">← العودة للرئيسية</a>
+      <h1>تواصل معنا</h1>
+      <p>هل لديك اقتراح أو مشكلة؟ نحن هنا للمساعدة</p>
+    </div>
+  </div>
+
+  <div class="tool-workspace">
+    <div class="container" style="max-width:600px">
+      <div class="tool-box">
+        <h2>أرسل رسالة</h2>
+        <div style="margin-bottom:16px">
+          <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:8px">الاسم</label>
+          <input class="input-field" type="text" id="name" placeholder="اسمك">
+        </div>
+        <div style="margin-bottom:16px">
+          <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:8px">البريد الإلكتروني</label>
+          <input class="input-field" type="email" id="email" placeholder="email@example.com" dir="ltr">
+        </div>
+        <div style="margin-bottom:20px">
+          <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:8px">الرسالة</label>
+          <textarea class="input-field" id="message" rows="5" placeholder="اكتب رسالتك هنا..."></textarea>
+        </div>
+        <!-- استبدل YOUR_EMAIL بإيميلك الحقيقي -->
+        <a id="sendBtn" class="btn" onclick="sendEmail()" style="cursor:pointer">إرسال الرسالة</a>
+        <p style="font-size:0.8rem;color:var(--text-dim);margin-top:14px">سيفتح هذا تطبيق البريد الإلكتروني لديك</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom"><p>© 2025 ToolBoxPro — جميع الحقوق محفوظة</p></div>
+    </div>
+  </footer>
+
+  <script>
+    function sendEmail() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+      // استبدل YOUR_EMAIL@gmail.com بإيميلك
+      const mailto = `mailto:YOUR_EMAIL@gmail.com?subject=رسالة من ${encodeURIComponent(name)}&body=${encodeURIComponent(message + '\n\n-- ' + email)}`;
+      window.location.href = mailto;
+    }
+  </script>
+</body>
+</html>

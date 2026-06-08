@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ترميز وفك ترميز Base64 مجاناً - ToolBoxPro">
+  <title>مرمّز Base64 — ToolBoxPro</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    textarea.input-field { min-height: 140px; resize: vertical; }
+    .mode-toggle { display: flex; background: var(--bg3); border: 1px solid var(--border); border-radius: 100px; padding: 4px; gap: 4px; width: fit-content; margin-bottom: 20px; }
+    .mode-btn { padding: 8px 22px; border-radius: 100px; border: none; background: none; color: var(--text-muted); cursor: pointer; font-family: var(--font-main); font-size: 0.9rem; transition: all 0.2s; }
+    .mode-btn.active { background: var(--accent); color: #000; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="logo"><span class="logo-icon">⬡</span><span class="logo-text">ToolBox<strong>Pro</strong></span></div>
+      <nav class="nav"><a href="../index.html">الرئيسية</a></nav>
+    </div>
+  </header>
+
+  <div class="tool-page-header">
+    <div class="container">
+      <a href="../index.html" class="back-link">← العودة للرئيسية</a>
+      <h1>🔄 مرمّز Base64</h1>
+      <p>ترميز النصوص إلى Base64 وفك ترميزها بسرعة</p>
+    </div>
+  </div>
+
+  <div class="tool-workspace">
+    <div class="container">
+      <div class="ad-slot ad-banner"><span class="ad-label">إعلان</span></div>
+
+      <div class="tool-box">
+        <h2>الوضع</h2>
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="encodeBtn" onclick="setMode('encode')">ترميز</button>
+          <button class="mode-btn" id="decodeBtn" onclick="setMode('decode')">فك ترميز</button>
+        </div>
+
+        <div id="encodeMode">
+          <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:8px">النص الأصلي</label>
+          <textarea class="input-field" id="inputText" placeholder="أدخل النص هنا..." oninput="process()"></textarea>
+        </div>
+
+        <div id="decodeMode" style="display:none">
+          <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:8px">نص Base64</label>
+          <textarea class="input-field" id="inputB64" placeholder="أدخل نص Base64 هنا..." oninput="process()"></textarea>
+        </div>
+      </div>
+
+      <div class="tool-box">
+        <h2>النتيجة</h2>
+        <div class="result-box" id="output" style="min-height:80px;white-space:pre-wrap;word-break:break-all"></div>
+        <div class="row-btns">
+          <button class="btn btn-outline" onclick="copyToClipboard(document.getElementById('output').textContent, this)">📋 نسخ النتيجة</button>
+          <button class="btn btn-outline" onclick="swapIO()">↕ عكس الإدخال</button>
+        </div>
+      </div>
+
+      <div class="ad-slot ad-banner"><span class="ad-label">إعلان</span></div>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let mode = 'encode';
+
+    function setMode(m) {
+      mode = m;
+      document.getElementById('encodeMode').style.display = m === 'encode' ? 'block' : 'none';
+      document.getElementById('decodeMode').style.display = m === 'decode' ? 'block' : 'none';
+      document.getElementById('encodeBtn').classList.toggle('active', m === 'encode');
+      document.getElementById('decodeBtn').classList.toggle('active', m === 'decode');
+      process();
+    }
+
+    function process() {
+      const out = document.getElementById('output');
+      try {
+        if (mode === 'encode') {
+          const text = document.getElementById('inputText').value;
+          out.textContent = text ? btoa(unescape(encodeURIComponent(text))) : '';
+          out.style.color = 'var(--accent)';
+        } else {
+          const b64 = document.getElementById('inputB64').value.trim();
+          out.textContent = b64 ? decodeURIComponent(escape(atob(b64))) : '';
+          out.style.color = 'var(--accent)';
+        }
+      } catch {
+        out.textContent = '⚠ نص غير صالح';
+        out.style.color = '#FF6B6B';
+      }
+    }
+
+    function swapIO() {
+      const result = document.getElementById('output').textContent;
+      if (!result || result.startsWith('⚠')) return;
+      if (mode === 'encode') {
+        setMode('decode');
+        document.getElementById('inputB64').value = result;
+      } else {
+        setMode('encode');
+        document.getElementById('inputText').value = result;
+      }
+      process();
+    }
+  </script>
+</body>
+</html>
