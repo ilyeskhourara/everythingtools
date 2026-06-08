@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Everything Tools — Free online tools: image compressor, password generator, color converter and more">
+  <title>Everything Tools — Free Online Tools</title>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">Everything<strong>Tools</strong></span>
+      </div>
+      <nav class="nav" id="mainNav">
+        <a href="index.html" data-i18n="nav.home">Home</a>
+        <a href="pages/about.html" data-i18n="nav.about">About</a>
+        <a href="pages/contact.html" data-i18n="nav.contact">Contact</a>
+      </nav>
+      <div class="lang-switcher">
+        <button onclick="setLang('en')" class="lang-btn" id="btn-en">EN</button>
+        <button onclick="setLang('fr')" class="lang-btn" id="btn-fr">FR</button>
+        <button onclick="setLang('ar')" class="lang-btn" id="btn-ar">AR</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <div class="hero-badge" data-i18n="hero.badge">100% Free · No Registration</div>
+      <h1 class="hero-title" data-i18n="hero.title.1">Smart Tools<br><span class="accent" data-i18n="hero.title.2">At Your Fingertips</span></h1>
+      <p class="hero-sub" data-i18n="hero.sub">Everything you need — all in one place. Fast, simple, and completely free.</p>
+      <div class="search-bar">
+        <input type="text" id="searchInput" data-i18n-placeholder="hero.search" placeholder="Search a tool..." oninput="filterTools(this.value)">
+        <span class="search-icon">🔍</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- AD BANNER — Top -->
+  <div class="container">
+    <div class="ad-slot ad-banner" id="ad-top">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="AAAAAAAAAA"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      <span class="ad-label">Advertisement</span>
+    </div>
+  </div>
+
+  <!-- TOOLS GRID -->
+  <section class="tools-section">
+    <div class="container">
+      <h2 class="section-title" data-i18n="tools.title">Available Tools</h2>
+      <div class="tools-grid" id="toolsGrid">
+
+        <a href="tools/image-compressor.html" class="tool-card" data-tags="image compress photo optimize">
+          <div class="tool-icon">🖼️</div>
+          <div class="tool-info">
+            <h3 data-i18n="tool.compressor.name">Image Compressor</h3>
+            <p data-i18n="tool.compressor.desc">Reduce image size without losing quality</p>
+          </div>
+          <span class="tool-badge" data-i18n="badge.new">New</span>
+        </a>
+
+        <a href="tools/password-generator.html" class="tool-card" data-tags="password security generate">
+          <div class="tool-icon">🔐</div>
+          <div class="tool-info">
+            <h3 data-i18n="tool.password.name">Password Generator</h3>
+            <p data-i18n="tool.password.desc">Create strong, secure passwords</p>
+          </div>
+        </a>
+
+        <a href="tools/color-converter.html" class="tool-card" data-tags="color convert hex rgb hsl">
+          <div class="tool-icon">🎨</div>
+          <div class="tool-info">
+            <h3 data-i18n="tool.color.name">Color Converter</h3>
+            <p data-i18n="tool.color.desc">Convert between HEX, RGB and HSL</p>
+          </div>
+        </a>
+
+        <a href="tools/word-counter.html" class="tool-card" data-tags="word count text characters">
+          <div class="tool-icon">📝</div>
+          <div class="tool-info">
+            <h3 data-i18n="tool.wordcount.name">Word Counter</h3>
+            <p data-i18n="tool.wordcount.desc">Count words, characters and lines</p>
+          </div>
+        </a>
+
+        <a href="tools/bmi-calculator.html" class="tool-card" data-tags="bmi body weight health">
+          <div class="tool-icon">⚖️</div>
+          <div class="tool-info">
+            <h3 data-i18n="tool.bmi.name">BMI Calculator</h3>
+            <p data-i18n="tool.bmi.desc">Calculate your body mass index</p>
+          </div>
+        </a>
+
+        <a href="tools/base64.html" class="tool-card" data-tags="base64 encode decode text">
+          <div class="tool-icon">🔄</div>
+          <div class="tool-info">
+            <h3 data-i18n="tool.base64.name">Base64 Encoder</h3>
+            <p data-i18n="tool.base64.desc">Encode and decode text</p>
+          </div>
+        </a>
+
+        <a href="tools/duplicate-finder.html" class="tool-card" data-tags="duplicate image finder photo similar">
+          <div class="tool-icon">🔍</div>
+          <div class="tool-info">
+            <h3 data-i18n="tool.dupfinder.name">Duplicate Image Finder</h3>
+            <p data-i18n="tool.dupfinder.desc">Find visually similar or duplicate images</p>
+          </div>
+          <span class="tool-badge" data-i18n="badge.new">New</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- AD BANNER — Middle -->
+  <div class="container">
+    <div class="ad-slot ad-banner-tall" id="ad-mid">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="BBBBBBBBBB"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      <span class="ad-label">Advertisement</span>
+    </div>
+  </div>
+
+  <!-- WHY US -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title" data-i18n="features.title">Why Everything Tools?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon">⚡</span>
+          <h3 data-i18n="features.fast.title">Lightning Fast</h3>
+          <p data-i18n="features.fast.desc">All tools run directly in your browser — no uploads to external servers</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🔒</span>
+          <h3 data-i18n="features.private.title">Your Privacy is Safe</h3>
+          <p data-i18n="features.private.desc">Your files and data never leave your device — 100% local processing</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">💸</span>
+          <h3 data-i18n="features.free.title">Free Forever</h3>
+          <p data-i18n="features.free.desc">No subscriptions, no registration, no limits — all tools completely free</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AD BANNER — Bottom -->
+  <div class="container">
+    <div class="ad-slot ad-banner" id="ad-bottom">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="CCCCCCCCCC"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      <span class="ad-label">Advertisement</span>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="margin-bottom:10px">
+            <span class="logo-icon">⬡</span>
+            <span class="logo-text">Everything<strong>Tools</strong></span>
+          </div>
+          <p data-i18n="footer.tagline">Free online tools for everyone</p>
+        </div>
+        <div class="footer-links">
+          <h4 data-i18n="footer.tools">Tools</h4>
+          <a href="tools/image-compressor.html" data-i18n="tool.compressor.name">Image Compressor</a>
+          <a href="tools/password-generator.html" data-i18n="tool.password.name">Password Generator</a>
+          <a href="tools/color-converter.html" data-i18n="tool.color.name">Color Converter</a>
+          <a href="tools/word-counter.html" data-i18n="tool.wordcount.name">Word Counter</a>
+          <a href="tools/duplicate-finder.html" data-i18n="tool.dupfinder.name">Duplicate Image Finder</a>
+        </div>
+        <div class="footer-links">
+          <h4 data-i18n="footer.site">Site</h4>
+          <a href="pages/about.html" data-i18n="nav.about">About</a>
+          <a href="pages/contact.html" data-i18n="nav.contact">Contact</a>
+          <a href="pages/privacy.html" data-i18n="nav.privacy">Privacy Policy</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Everything Tools — <span data-i18n="footer.rights">All rights reserved</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/i18n.js"></script>
+  <script>initI18n();</script>
+</body>
+</html>
