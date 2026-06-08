@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duplicate Image Finder — Everything Tools</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent-alt: #ff6b9d;
+    --accent3: #00d4aa;
+    --danger: #ff4757;
+  }
+  .drop-zone {
+    border: 2px dashed var(--border-hover); border-radius: 18px; padding: 3rem 2rem;
+    text-align: center; background: var(--bg2); position: relative;
+    transition: all .3s; cursor: pointer;
+  }
+  .drop-zone:hover { border-color: var(--accent); box-shadow: 0 0 36px rgba(0,229,160,.1); }
+  .drop-zone.drag-over { border-color: var(--accent); border-style: solid; transform: scale(1.01); }
+  .drop-icon { font-size: 3rem; display: block; margin-bottom: 1rem; }
+  .drop-title { font-size: 1.2rem; font-weight: 700; margin-bottom: .5rem; }
+  .drop-sub { color: var(--text-muted); font-size: .88rem; line-height: 1.6; }
+  .drop-sub strong { color: var(--accent); }
+  #fileInput { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10; }
+  .pick-btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: linear-gradient(135deg, var(--accent), #0097ff);
+    color: #000; border: none; border-radius: 100px;
+    padding: .7rem 1.8rem; font-size: .9rem; font-weight: 700;
+    margin-top: 1.4rem; pointer-events: none;
+    box-shadow: 0 4px 20px rgba(0,229,160,.3);
+  }
+  .stats-bar { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin: 1.4rem 0; }
+  .stat-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: .9rem; transition: border-color .3s;
+  }
+  .stat-card.active { border-color: var(--accent); }
+  .stat-icon { font-size: 1.6rem; }
+  .stat-val { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+  .stat-label { font-size: .72rem; color: var(--text-muted); margin-top: 2px; }
+  .progress-wrap { display: none; margin: 1.4rem 0; }
+  .progress-wrap.show { display: block; }
+  .progress-track { background: var(--bg2); border-radius: 999px; height: 9px; overflow: hidden; border: 1px solid var(--border); }
+  .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent-alt)); border-radius: 999px; transition: width .3s; }
+  .progress-text { text-align: center; font-size: .82rem; color: var(--text-muted); margin-top: .5rem; }
+  .controls { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem 1.4rem; margin: 1.4rem 0; display: none; }
+  .controls.show { display: block; }
+  .control-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .control-label { font-size: .88rem; color: var(--text-muted); white-space: nowrap; }
+  input[type=range] { flex: 1; accent-color: var(--accent); height: 5px; cursor: pointer; min-width: 120px; }
+  .control-val { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: .2rem .7rem; font-size: .82rem; font-weight: 700; color: var(--accent); min-width: 3rem; text-align: center; }
+  .threshold-info { font-size: .76rem; color: var(--text-muted); margin-top: .6rem; }
+  .btn-sm { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #000; border: none; border-radius: 10px; padding: .45rem 1.1rem; font-size: .82rem; font-weight: 700; cursor: pointer; }
+  .results-header { display: flex; align-items: center; justify-content: space-between; margin: 2rem 0 1rem; flex-wrap: wrap; gap: .5rem; }
+  .results-title { font-size: 1.2rem; font-weight: 700; }
+  .badge { background: rgba(0,229,160,.12); color: var(--accent); border: 1px solid rgba(0,229,160,.28); border-radius: 999px; padding: .2rem .9rem; font-size: .78rem; font-weight: 600; }
+  .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 10px; padding: .3rem .9rem; font-size: .78rem; font-weight: 600; cursor: pointer; }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .group-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 1rem; overflow: hidden; animation: slideIn .4s ease both; }
+  @keyframes slideIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+  .group-header { padding: .9rem 1.3rem; background: linear-gradient(135deg,rgba(0,229,160,.06),transparent); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .group-title { font-weight: 700; font-size: .95rem; }
+  .group-meta { font-size: .76rem; color: var(--text-muted); }
+  .sim-badge { font-size: .76rem; font-weight: 700; padding: .2rem .7rem; border-radius: 999px; background: rgba(0,212,170,.12); color: var(--accent3); border: 1px solid rgba(0,212,170,.28); }
+  .sim-badge.exact { background: rgba(255,71,87,.1); color: var(--danger); border-color: rgba(255,71,87,.28); }
+  .group-images { padding: 1.1rem 1.3rem; display: flex; flex-wrap: wrap; gap: .9rem; }
+  .img-item { position: relative; border-radius: 10px; overflow: hidden; border: 2px solid var(--border); cursor: pointer; transition: all .25s; background: var(--bg2); flex: 0 0 auto; }
+  .img-item:hover { border-color: var(--accent); transform: scale(1.04); }
+  .img-item.selected { border-color: var(--danger); }
+  .img-item img { display: block; width: 120px; height: 120px; object-fit: cover; }
+  .img-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent,rgba(0,0,0,.85)); padding: .7rem .4rem .35rem; font-size: .65rem; color: #ccc; text-align: center; }
+  .img-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px; }
+  .select-check { position: absolute; top: 5px; right: 5px; width: 20px; height: 20px; background: rgba(0,0,0,.5); border: 2px solid rgba(255,255,255,.35); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: .75rem; transition: all .2s; }
+  .img-item.selected .select-check { background: var(--danger); border-color: var(--danger); }
+  .img-item.selected .select-check::after { content: '✓'; color: #fff; font-weight: 700; }
+  .action-bar { position: sticky; bottom: 1rem; background: rgba(13,15,20,.95); border: 1px solid var(--border); backdrop-filter: blur(12px); border-radius: 14px; padding: .9rem 1.4rem; display: none; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; box-shadow: 0 8px 36px rgba(0,0,0,.4); z-index: 100; }
+  .action-bar.show { display: flex; }
+  .btn-danger { background: linear-gradient(135deg,var(--danger),#c0392b); color: #fff; border: none; border-radius: 10px; padding: .55rem 1.4rem; font-size: .88rem; font-weight: 700; cursor: pointer; }
+  .empty-state { text-align: center; padding: 3rem 1rem; display: none; }
+  .empty-state.show { display: block; }
+  .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .empty-title { font-size: 1.2rem; font-weight: 700; color: var(--accent3); }
+  .empty-sub { color: var(--text-muted); margin-top: .5rem; font-size: .9rem; }
+  .toast { position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%) translateY(-80px); background: var(--bg3); border: 1px solid var(--accent); color: var(--text); padding: .75rem 1.6rem; border-radius: 12px; font-size: .88rem; font-weight: 600; box-shadow: 0 8px 32px rgba(0,0,0,.4); transition: transform .35s cubic-bezier(.34,1.56,.64,1); z-index: 999; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  @media(max-width:600px) { .stats-bar{grid-template-columns:repeat(2,1fr)} .img-item img{width:90px;height:90px} }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <a href="../index.html" class="logo" style="text-decoration:none">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">Everything<strong>Tools</strong></span>
+    </a>
+    <nav class="nav">
+      <a href="../index.html" data-i18n="nav.home">Home</a>
+    </nav>
+    <div class="lang-switcher">
+      <button onclick="setLang('en')" class="lang-btn" id="btn-en">EN</button>
+      <button onclick="setLang('fr')" class="lang-btn" id="btn-fr">FR</button>
+      <button onclick="setLang('ar')" class="lang-btn" id="btn-ar">AR</button>
+    </div>
+  </div>
+</header>
+
+<div class="tool-page-header">
+  <div class="container">
+    <a href="../index.html" class="back-link" data-i18n="back">← Back to Home</a>
+    <h1>🔍 <span data-i18n="dupfinder.title">Duplicate Image Finder</span></h1>
+    <p data-i18n="dupfinder.sub">Compares visual content — regardless of filename or file size</p>
+  </div>
+</div>
+
+<div class="tool-workspace">
+  <div class="container">
+
+    <div class="tool-box" style="padding:0;overflow:hidden;background:transparent;border:none;">
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" multiple accept="image/*">
+        <span class="drop-icon">🖼️</span>
+        <div class="drop-title" data-i18n="dupfinder.drop.title">Drop images here or click to select</div>
+        <p class="drop-sub" data-i18n="dupfinder.drop.sub">Supports JPG, PNG, WebP, GIF — select <strong>multiple files</strong></p>
+        <div class="pick-btn" data-i18n="dupfinder.btn.pick">📂 Choose Images</div>
+      </div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-card" id="statTotal">
+        <span class="stat-icon">📁</span>
+        <div><div class="stat-val" id="totalCount">0</div><div class="stat-label" data-i18n="dupfinder.stat.total">Images loaded</div></div>
+      </div>
+      <div class="stat-card" id="statGroups">
+        <span class="stat-icon">🔗</span>
+        <div><div class="stat-val" id="groupsCount">0</div><div class="stat-label" data-i18n="dupfinder.stat.groups">Duplicate groups</div></div>
+      </div>
+      <div class="stat-card" id="statDupes">
+        <span class="stat-icon">♻️</span>
+        <div><div class="stat-val" id="dupesCount">0</div><div class="stat-label" data-i18n="dupfinder.stat.dupes">Duplicates found</div></div>
+      </div>
+    </div>
+
+    <div class="controls" id="controls">
+      <div class="control-row">
+        <span class="control-label" data-i18n="dupfinder.threshold">Similarity threshold:</span>
+        <input type="range" id="thresholdSlider" min="60" max="100" value="85" oninput="updateThreshold(this.value)">
+        <span class="control-val" id="thresholdVal">85%</span>
+        <button class="btn-sm" onclick="reanalyze()" data-i18n="dupfinder.btn.reanalyze">Re-analyze</button>
+      </div>
+      <div class="threshold-info" data-i18n="dupfinder.threshold.info">90%+ = near identical · 75–89% = similar · below 75% = different</div>
+    </div>
+
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText"></div>
+    </div>
+
+    <div id="resultsArea"></div>
+
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">🎉</div>
+      <div class="empty-title" data-i18n="dupfinder.empty.title">✅ No duplicates found!</div>
+      <div class="empty-sub" data-i18n="dupfinder.empty.sub">All images appear to be unique.</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="action-bar" id="actionBar">
+  <span style="font-size:.9rem;color:var(--text-muted)"><span id="selectedCount">0</span> <span data-i18n="dupfinder.selected">selected</span></span>
+  <div style="display:flex;gap:.7rem">
+    <button class="btn-ghost" onclick="clearSelection()" data-i18n="dupfinder.clear">Clear selection</button>
+    <button class="btn-danger" onclick="deleteSelected()" data-i18n="dupfinder.export">🗑️ Export list</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../js/i18n.js"></script>
+<script>
+var allFiles = [], groups = [], selected = new Set(), threshold = 85;
+
+function updateThreshold(v){ threshold = parseInt(v); document.getElementById('thresholdVal').textContent = v + '%'; }
+
+var dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('drag-over'); });
+dz.addEventListener('dragleave', function(){ dz.classList.remove('drag-over'); });
+dz.addEventListener('drop', function(e){ e.preventDefault(); dz.classList.remove('drag-over'); handleFiles(Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'))); });
+document.getElementById('fileInput').addEventListener('change', function(e){ handleFiles(Array.from(e.target.files)); });
+
+async function handleFiles(files) {
+  allFiles = files; selected.clear();
+  document.getElementById('totalCount').textContent = files.length;
+  document.getElementById('groupsCount').textContent = '0';
+  document.getElementById('dupesCount').textContent = '0';
+  document.getElementById('resultsArea').innerHTML = '';
+  document.getElementById('emptyState').classList.remove('show');
+  document.getElementById('actionBar').classList.remove('show');
+  document.getElementById('controls').classList.add('show');
+  showProgress(true);
+  var hashes = await computeHashes(files);
+  groups = findGroups(hashes, threshold);
+  showProgress(false);
+  render(files, groups);
+}
+
+function reanalyze(){ if (allFiles.length) handleFiles(allFiles); }
+
+function dHash(canvas) {
+  var size=16, w=size+1, h=size;
+  var oc=document.createElement('canvas'); oc.width=w; oc.height=h;
+  var ctx=oc.getContext('2d'); ctx.drawImage(canvas,0,0,w,h);
+  var d=ctx.getImageData(0,0,w,h).data, bits='';
+  for (var y=0;y<h;y++) for (var x=0;x<size;x++) {
+    var i1=(y*w+x)*4, i2=(y*w+x+1)*4;
+    var g1=d[i1]*.299+d[i1+1]*.587+d[i1+2]*.114;
+    var g2=d[i2]*.299+d[i2+1]*.587+d[i2+2]*.114;
+    bits += g1<g2?'1':'0';
+  }
+  return bits;
+}
+
+function hashFile(file) {
+  return new Promise(function(res){
+    var img=new Image(), url=URL.createObjectURL(file);
+    img.onload=function(){ var c=document.createElement('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight; c.getContext('2d').drawImage(img,0,0); URL.revokeObjectURL(url); res(dHash(c)); };
+    img.onerror=function(){ URL.revokeObjectURL(url); res(null); };
+    img.src=url;
+  });
+}
+
+async function computeHashes(files) {
+  var hashes=[];
+  for (var i=0;i<files.length;i++) {
+    hashes.push(await hashFile(files[i]));
+    var analyzing = (window._t && window._t['dupfinder.analyzing']) || 'Analyzing';
+    var of = (window._t && window._t['dupfinder.of']) || 'of';
+    updateProgress(((i+1)/files.length)*100, analyzing + ' ' + (i+1) + ' ' + of + ' ' + files.length);
+  }
+  return hashes;
+}
+
+function sim(a,b){ var d=0; for(var i=0;i<a.length;i++) if(a[i]!==b[i]) d++; return (1-d/a.length)*100; }
+
+function findGroups(hashes, thresh) {
+  var n=hashes.length, visited=new Array(n).fill(false), result=[];
+  for (var i=0;i<n;i++) {
+    if (visited[i]||!hashes[i]) continue;
+    var group=[{idx:i,sim:100}];
+    for (var j=i+1;j<n;j++) {
+      if (visited[j]||!hashes[j]) continue;
+      var s=sim(hashes[i],hashes[j]);
+      if (s>=thresh){ group.push({idx:j,sim:Math.round(s)}); visited[j]=true; }
+    }
+    if (group.length>1){ visited[i]=true; result.push(group); }
+  }
+  return result;
+}
+
+function render(files, groups) {
+  var area=document.getElementById('resultsArea');
+  area.innerHTML='';
+  document.getElementById('groupsCount').textContent=groups.length;
+  var dupes=groups.reduce(function(a,g){return a+g.length-1;},0);
+  document.getElementById('dupesCount').textContent=dupes;
+  if (!groups.length){ document.getElementById('emptyState').classList.add('show'); return; }
+
+  var groupTxt = (window._t && window._t['dupfinder.group']) || 'Group';
+  var imagesTxt = (window._t && window._t['dupfinder.images']) || 'images';
+  var selectDupTxt = (window._t && window._t['dupfinder.select.dupes']) || 'Select Duplicates';
+  var resultsTxt = (window._t && window._t['dupfinder.results']) || '📋 Results';
+  var similarTxt = (window._t && window._t['dupfinder.similar']) || '% similar';
+
+  var hdr=document.createElement('div'); hdr.className='results-header';
+  hdr.innerHTML='<div class="results-title">'+resultsTxt+'</div><div style="display:flex;gap:.6rem;align-items:center;"><span class="badge">'+groups.length+'</span><button class="btn-ghost" onclick="selectDupes()">'+selectDupTxt+'</button></div>';
+  area.appendChild(hdr);
+
+  groups.forEach(function(group, gi) {
+    var avgSim=Math.round(group.slice(1).reduce(function(a,x){return a+x.sim;},0)/Math.max(group.length-1,1));
+    var card=document.createElement('div'); card.className='group-card'; card.style.animationDelay=(gi*.06)+'s';
+    card.innerHTML='<div class="group-header"><div><div class="group-title">'+groupTxt+' '+(gi+1)+' — '+group.length+' '+imagesTxt+'</div><div class="group-meta">'+group.map(function(x){return files[x.idx].name;}).join(' · ')+'</div></div><span class="sim-badge'+(avgSim>=99?' exact':'')+'">'+avgSim+similarTxt+'</span></div><div class="group-images" id="gi'+gi+'"></div>';
+    area.appendChild(card);
+    var row=card.querySelector('#gi'+gi);
+    group.forEach(function(item){
+      var el=document.createElement('div'); el.className='img-item'; el.dataset.idx=item.idx;
+      var url=URL.createObjectURL(files[item.idx]);
+      el.innerHTML='<img src="'+url+'" alt=""><div class="img-info"><div class="img-name">'+files[item.idx].name+'</div><div style="color:var(--text-muted)">'+fmtSize(files[item.idx].size)+'</div></div><div class="select-check"></div>';
+      el.addEventListener('click', function(){ toggleSel(el,item.idx); });
+      row.appendChild(el);
+    });
+  });
+}
+
+function toggleSel(el, idx) {
+  if (selected.has(idx)){ selected.delete(idx); el.classList.remove('selected'); }
+  else { selected.add(idx); el.classList.add('selected'); }
+  document.getElementById('selectedCount').textContent=selected.size;
+  document.getElementById('actionBar').classList.toggle('show',selected.size>0);
+}
+
+function selectDupes() {
+  clearSelection();
+  groups.forEach(function(g){ g.slice(1).forEach(function(x){ selected.add(x.idx); var el=document.querySelector('.img-item[data-idx="'+x.idx+'"]'); if(el) el.classList.add('selected'); }); });
+  document.getElementById('selectedCount').textContent=selected.size;
+  if (selected.size) document.getElementById('actionBar').classList.add('show');
+}
+
+function clearSelection() {
+  selected.clear();
+  document.querySelectorAll('.img-item.selected').forEach(function(el){ el.classList.remove('selected'); });
+  document.getElementById('selectedCount').textContent='0';
+  document.getElementById('actionBar').classList.remove('show');
+}
+
+function deleteSelected() {
+  var names=Array.from(selected).map(function(i){return allFiles[i].name;});
+  var text='Images selected for deletion ('+names.length+'):\n\n'+names.map(function(n,i){return (i+1)+'. '+n;}).join('\n');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));
+  a.download='duplicate_images.txt'; a.click();
+  var msg = (window._t && window._t['dupfinder.exported']) || '✅ List exported successfully';
+  showToast(msg);
+}
+
+function fmtSize(b){ if(b<1024)return b+'B'; if(b<1048576)return (b/1024).toFixed(1)+'KB'; return (b/1048576).toFixed(1)+'MB'; }
+function showProgress(v){ document.getElementById('progressWrap').classList.toggle('show',v); }
+function updateProgress(p,t){ document.getElementById('progressFill').style.width=p+'%'; document.getElementById('progressText').textContent=t; }
+function showToast(m){ var t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},3000); }
+
+initI18n();
+</script>
+</body>
+</html>
