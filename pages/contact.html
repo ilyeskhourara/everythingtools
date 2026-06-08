@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Everything Tools</title>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="../index.html" class="logo" style="text-decoration:none">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">Everything<strong>Tools</strong></span>
+      </a>
+      <nav class="nav">
+        <a href="../index.html" data-i18n="nav.home">Home</a>
+      </nav>
+      <div class="lang-switcher">
+        <button onclick="setLang('en')" class="lang-btn" id="btn-en">EN</button>
+        <button onclick="setLang('fr')" class="lang-btn" id="btn-fr">FR</button>
+        <button onclick="setLang('ar')" class="lang-btn" id="btn-ar">AR</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="tool-page-header">
+    <div class="container">
+      <a href="../index.html" class="back-link" data-i18n="back">← Back to Home</a>
+      <h1 data-i18n="contact.title">Contact Us</h1>
+      <p data-i18n="contact.sub">Have a suggestion or found an issue? We're here to help.</p>
+    </div>
+  </div>
+
+  <div class="tool-workspace">
+    <div class="container" style="max-width:600px">
+
+      <!-- AD TOP -->
+      <div class="ad-slot ad-banner" id="ad-top">
+        <ins class="adsbygoogle" style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="AAAAAAAAAA"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <span class="ad-label">Advertisement</span>
+      </div>
+
+      <div class="tool-box">
+        <h2 data-i18n="contact.form.title">SEND A MESSAGE</h2>
+        <div style="margin-bottom:16px">
+          <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:8px" data-i18n="contact.form.name">Name</label>
+          <input class="input-field" type="text" id="nameField" data-i18n-placeholder="contact.form.name.ph">
+        </div>
+        <div style="margin-bottom:16px">
+          <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:8px" data-i18n="contact.form.email">Email</label>
+          <input class="input-field" type="email" id="emailField" placeholder="email@example.com" dir="ltr">
+        </div>
+        <div style="margin-bottom:20px">
+          <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:8px" data-i18n="contact.form.message">Message</label>
+          <textarea class="input-field" id="msgField" rows="5" data-i18n-placeholder="contact.form.message.ph"></textarea>
+        </div>
+        <button class="btn" onclick="sendEmail()" data-i18n="contact.form.send">Send Message</button>
+        <p style="font-size:0.78rem;color:var(--text-dim);margin-top:12px" data-i18n="contact.form.note">This will open your email client</p>
+      </div>
+
+      <!-- AD BOTTOM -->
+      <div class="ad-slot ad-banner-tall" id="ad-bottom">
+        <ins class="adsbygoogle" style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="BBBBBBBBBB"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <span class="ad-label">Advertisement</span>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 Everything Tools — <span data-i18n="footer.rights">All rights reserved</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function sendEmail() {
+      const name = document.getElementById('nameField').value;
+      const email = document.getElementById('emailField').value;
+      const msg = document.getElementById('msgField').value;
+      const mailto = `mailto:YOUR_EMAIL@gmail.com?subject=Message from ${encodeURIComponent(name)}&body=${encodeURIComponent(msg + '\n\n-- ' + email)}`;
+      window.location.href = mailto;
+    }
+  </script>
+  <script src="../js/i18n.js"></script>
+  <script>initI18n();</script>
+</body>
+</html>
